@@ -1,14 +1,18 @@
-from res.dql_tf2 import Agent
+from dql_tf2.simple_dqn_tf2 import Agent
 import numpy as np
 import gym
-from res.dql_tf2 import plotLearning
+from dql_tf2.utils import plotLearning
 import tensorflow as tf
+import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     tf.compat.v1.disable_eager_execution()
     env = gym.make('LunarLander-v2')
     lr = 0.001
     n_games = 500
+    print("shape=",env.observation_space.shape)#shape= (8,)
+    print("shape=",env.action_space.n)#shape= 4
+
     agent = Agent(gamma=0.99, epsilon=1.0, lr=lr,
                 input_dims=env.observation_space.shape,
                 n_actions=env.action_space.n, mem_size=1000000, batch_size=64,
@@ -20,6 +24,7 @@ if __name__ == '__main__':
         done = False
         score = 0
         observation = env.reset()
+        print(observation)
         while not done:
             action = agent.choose_action(observation)
             observation_, reward, done, info = env.step(action)

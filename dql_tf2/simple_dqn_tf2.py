@@ -81,12 +81,19 @@ class Agent():
 
         states, actions, rewards, states_, dones = self.memory.sample_buffer(self.batch_size)
 
-        q_eval = self.q_eval.predict(states)
-        q_next = self.q_eval.predict(states_)
+        q_eval = self.q_eval.predict(states)#predicted actions
+        q_next = self.q_eval.predict(states_)#predited actions
 
 
         q_target = np.copy(q_eval)
         batch_index = np.arange(self.batch_size, dtype=np.int32)
+
+        print("states=", states.shape, "states_", states_.shape)
+        #states= (64, 8) states_ (64, 8)
+        print("q_eval=", q_eval.shape, "q_next", q_next.shape)
+        #q_eval= (64, 4) q_next (64, 4)
+        print("dones=", dones.shape)
+        #dones= (64,)
 
         q_target[batch_index, actions] = rewards + self.gamma * np.max(q_next, axis=1)*dones
 
